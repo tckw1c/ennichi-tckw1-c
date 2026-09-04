@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1年C組｜縁日謎解き 解説</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+      color: #17395c;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.25) 2px, transparent 3px),
+        radial-gradient(circle at 80% 70%, rgba(255,255,255,.18) 2px, transparent 3px),
+        linear-gradient(135deg, #07519a, #0780c9 50%, #65c9ed);
+      background-size: 35px 35px, 45px 45px, cover;
+      min-height: 100vh;
+    }
+
+    /* =========================
+       提灯
+    ========================= */
+
+    .lanterns {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 15px 10px 5px;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    .lantern {
+      position: relative;
+      width: 42px;
+      height: 58px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #ff668c, #e9435f);
+      border-radius: 50% 50% 45% 45%;
+      box-shadow:
+        0 0 12px rgba(255, 225, 100, .95),
+        0 0 25px rgba(255, 225, 100, .65);
+    }
+
+    .lantern::before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 7px;
+      right: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ffd65a;
+    }
+
+    .lantern::after {
+      content: "";
+      position: absolute;
+      bottom: -7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 9px;
+      background: #ffd65a;
+      border-radius: 2px;
+    }
+
+    /* =========================
+       ヘッダー
+    ========================= */
+
+    header {
+      width: min(900px, calc(100% - 30px));
+      margin: 10px auto 20px;
+      padding: 25px 20px 30px;
+      background: #fff9eb;
+      border: 5px solid #ffd65a;
+      border-radius: 25px;
+      box-shadow: 0 8px 0 #07519a;
+      text-align: center;
+      position: relative;
+    }
+
+    header::before,
+    header::after {
+      content: "";
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      background: #e9435f;
+      border-radius: 50%;
+      top: 15px;
+    }
+
+    header::before {
+      left: 15px;
+    }
+
+    header::after {
+      right: 15px;
+    }
+
+    .logo {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      background: #07549d;
+      border-radius: 18px;
+      padding: 8px;
+      box-shadow: 0 5px 0 #a82e45;
+    }
+
+    .class-name {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 7px 18px;
+      background: #07549d;
+      color: white;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    h1 {
+      margin: 15px 0 5px;
+      font-size: clamp(32px, 6vw, 52px);
+      color: #063b78;
+      text-shadow: 3px 3px 0 #b9e8ff;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    /* =========================
+       メイン
+    ========================= */
+
+    main {
+      width: min(900px, calc(100% - 30px));
+      margin: 0 auto 40px;
+    }
+
+    .explanation-card {
+      background: #fff;
+      border: 4px solid #ffd65a;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 7px 0 #07519a;
+    }
+
+    .question-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: #063b78;
+      font-size: 25px;
+    }
+
+    .question-badge {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-width: 48px;
+      height: 48px;
+      padding: 0 10px;
+      background: #e9435f;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 4px 0 #a82e45;
+    }
+
+    /* =========================
+       問題画像
+    ========================= */
+
+    .puzzle-image-box {
+      background: white;
+      border: 4px solid #ff668c;
+      border-radius: 16px;
+      padding: 12px;
+      margin: 15px 0 20px;
+      text-align: center;
+    }
+
+    .puzzle-image-box img {
+      display: block;
+      width: 100%;
+      max-width: 750px;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+
+    /* =========================
+       解説
+    ========================= */
+
+    .explanation-text {
+      background: #eefaff;
+      border: 3px solid #9ccde7;
+      border-radius: 16px;
+      padding: 18px;
+      line-height: 1.9;
+      font-size: 16px;
+    }
+
+    .step {
+      margin: 12px 0;
+      padding: 12px 15px;
+      background: white;
+      border-radius: 12px;
+      border-left: 6px solid #07549d;
+    }
+
+    .answer {
+      margin-top: 18px;
+      padding: 15px;
+      text-align: center;
+      background: #fff7d6;
+      border: 3px solid #ffd65a;
+      border-radius: 14px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #e9435f;
+    }
+
+    /* =========================
+       謎解き終了メッセージ
+    ========================= */
+
+    .finish-message {
+      background: #fff9eb;
+      border: 4px solid #ffd65a;
+      border-radius: 20px;
+      padding: 25px 20px;
+      margin: 30px 0;
+      text-align: center;
+      box-shadow: 0 7px 0 #07519a;
+    }
+
+    .finish-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: #e9435f;
+      margin-bottom: 15px;
+    }
+
+    .finish-message p {
+      margin: 8px 0;
+      font-size: 17px;
+      font-weight: bold;
+      line-height: 1.8;
+    }
+
+    .finish-main {
+      margin-top: 18px !important;
+      font-size: 21px !important;
+      color: #063b78;
+    }
+
+    .finish-main strong {
+      color: #e9435f;
+    }
+
+    /* =========================
+       戻るボタン
+    ========================= */
+
+    .back-area {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 13px 24px;
+      background: white;
+      color: #07549d;
+      text-decoration: none;
+      font-weight: bold;
+      border: 3px solid #07549d;
+      border-radius: 14px;
+      box-shadow: 0 4px 0 #063b78;
+      transition: .15s;
+    }
+
+    .back-button:hover {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #063b78;
+    }
+
+    /* =========================
+       スマホ
+    ========================= */
+
+    @media (max-width: 650px) {
+      .lanterns {
+        gap: 8px;
+        padding-top: 12px;
+      }
+
+      .lantern {
+        width: 31px;
+        height: 45px;
+      }
+
+      header {
+        padding: 20px 15px 25px;
+      }
+
+      .logo {
+        width: 125px;
+        height: 125px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      .explanation-card {
+        padding: 18px;
+      }
+
+      .question-title {
+        font-size: 21px;
+      }
+
+      .question-badge {
+        min-width: 42px;
+        height: 42px;
+        font-size: 16px;
+      }
+
+      .explanation-text {
+        font-size: 15px;
+      }
+
+      .finish-title {
+        font-size: 25px;
+      }
+
+      .finish-message p {
+        font-size: 15px;
+      }
+
+      .finish-main {
+        font-size: 18px !important;
+      }
+
+      .back-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 提灯 -->
+  <div class="lanterns">
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+  </div>
+
+  <!-- ヘッダー -->
+  <header>
+
+    <img src="logo.jpg" alt="1年C組ロゴ" class="logo">
+
+    <div class="class-name">
+      文化祭・1年C組
+    </div>
+
+    <h1>縁日謎解き</h1>
+
+    <p class="subtitle">
+      全問の解き方を確認しよう！
+    </p>
+
+  </header>
+
+  <main>
+
+    <!-- =========================
+         第1問
+    ========================= -->
+
+    <section class="explanation-card">
+
+      <h2 class="question-title">
+        <span class="question-badge">第1</span>
+        第1問の解説
+      </h2>
+
+      <div class="puzzle-image-box">
+        <img src="puzzle1.png" alt="第1問の問題">
+      </div>
+
+      <div class="explanation-text">
+
+        <div class="step">
+          ① 教室に置いてある<strong>屋台の名前</strong>に注目する。
+        </div>
+
+        <div class="step">
+          ② 屋台の名前を<strong>ひらがな</strong>にする。
+        </div>
+
+        <div class="step">
+          ③ 図の空いているところに当てはめると、答えが分かる。
+        </div>
+
+        <div class="answer">
+          答え：わたがし
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         第2問
+    ========================= -->
+
+    <section class="explanation-card">
+
+      <h2 class="question-title">
+        <span class="question-badge">第2</span>
+        第2問の解説
+      </h2>
+
+      <div class="puzzle-image-box">
+        <img src="puzzle2.png" alt="第2問の問題">
+      </div>
+
+      <div class="explanation-text">
+
+        <div class="step">
+          ① 図に書かれている<strong>生物の名前</strong>に注目する。
+        </div>
+
+        <div class="step">
+          ② 生物の名前を<strong>ローマ字</strong>に直す。
+        </div>
+
+        <div class="step">
+          ③ 図の<strong>矢印がある場所</strong>を確認する。
+        </div>
+
+        <div class="step">
+          ④ 矢印が指している場所の<strong>アルファベット</strong>を読む。
+        </div>
+
+        <div class="answer">
+          答え：まつり
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         第3問
+    ========================= -->
+
+    <section class="explanation-card">
+
+      <h2 class="question-title">
+        <span class="question-badge">第3</span>
+        第3問の解説
+      </h2>
+
+      <div class="puzzle-image-box">
+        <img src="puzzle3.png" alt="第3問の問題">
+      </div>
+
+      <div class="explanation-text">
+
+        <div class="step">
+          ① まず、図の<strong>上のほう</strong>を見る。
+        </div>
+
+        <div class="step">
+          ② 上の部分を見ると、文字を<strong>五十音順に一文字ずらす</strong>ことが分かる。
+        </div>
+
+        <div class="step">
+          ③ そのルールを使って、下の部分も同じように一文字ずつ五十音順にずらす。
+        </div>
+
+        <div class="step">
+          ④ 変換した文字を読むと、答えが出てくる。
+        </div>
+
+        <div class="answer">
+          答え：とりい
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         第4問
+    ========================= -->
+
+    <section class="explanation-card">
+
+      <h2 class="question-title">
+        <span class="question-badge">第4</span>
+        第4問の解説
+      </h2>
+
+      <div class="puzzle-image-box">
+        <img src="puzzle4.png" alt="第4問の問題">
+      </div>
+
+      <div class="explanation-text">
+
+        <div class="step">
+          ① 図にある<strong>アルファベット</strong>に注目する。
+        </div>
+
+        <div class="step">
+          ② アルファベットを<strong>元素記号</strong>に変える。
+        </div>
+
+        <div class="step">
+          ③ その元素記号の<strong>元素番号</strong>を調べる。
+        </div>
+
+        <div class="step">
+          ④ 元素番号を、五十音の<strong>何番目か</strong>として考える。
+        </div>
+
+        <div class="step">
+          ⑤ 元素番号番目の五十音の文字に直して読む。
+        </div>
+
+        <div class="answer">
+          答え：ゆかた
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         最終問題
+    ========================= -->
+
+    <section class="explanation-card">
+
+      <h2 class="question-title">
+        <span class="question-badge">最終</span>
+        最終問題の解説
+      </h2>
+
+      <div class="puzzle-image-box">
+        <img src="puzzle5.png" alt="最終問題の問題">
+      </div>
+
+      <div class="explanation-text">
+
+        <div class="step">
+          ① 図を見ると、これは<strong>カレンダー</strong>になっている。
+        </div>
+
+        <div class="step">
+          ② カレンダーの<strong>日曜日</strong>のところを確認する。
+        </div>
+
+        <div class="step">
+          ③ 日曜日のところには<strong>「円」</strong>が書かれている。
+        </div>
+
+        <div class="step">
+          ④ 「円」は<strong>「えん」</strong>と読む。
+        </div>
+
+        <div class="step">
+          ⑤ 日曜日の<strong>「日」＝「にち」</strong>と合わせる。
+        </div>
+
+        <div class="step">
+          ⑥ 「えん」＋「にち」＝<strong>「えんにち」</strong>となる。
+        </div>
+
+        <div class="step">
+          ⑦ 「えんにち」を漢字にすると、<strong>「縁日」</strong>になる。
+        </div>
+
+        <div class="answer">
+          答え：縁日
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         謎解き終了
+    ========================= -->
+
+    <div class="finish-message">
+
+      <div class="finish-title">
+        🎉 謎解き終了！ 🎉
+      </div>
+
+      <p>
+        これですべての謎解きは終了です！
+      </p>
+
+      <p>
+        最後まで挑戦してくれてありがとう！
+      </p>
+
+      <p class="finish-main">
+        それでは、<strong>縁日を楽しんでいってね！</strong> 🏮✨
+      </p>
+
+    </div>
+
+
+    <!-- =========================
+         戻る
+    ========================= -->
+
+    <div class="back-area">
+      <a href="index.html" class="back-button">
+        ← 最初のページへ戻る
+      </a>
+    </div>
+
+  </main>
+
+</body>
+</html>

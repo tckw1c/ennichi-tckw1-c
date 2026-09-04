@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    1年C組｜縁日謎解き 第2問 解説
+  </title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+
+      font-family:
+        "Yu Gothic",
+        "Hiragino Kaku Gothic ProN",
+        sans-serif;
+
+      color: #17395c;
+
+      background:
+        radial-gradient(
+          circle at 20% 20%,
+          rgba(255,255,255,0.18) 2px,
+          transparent 3px
+        ),
+        radial-gradient(
+          circle at 80% 30%,
+          rgba(255,255,255,0.16) 2px,
+          transparent 3px
+        ),
+        linear-gradient(
+          135deg,
+          #07519a,
+          #0780c9,
+          #65c9ed
+        );
+
+      background-size:
+        35px 35px,
+        45px 45px,
+        cover;
+
+      min-height: 100vh;
+    }
+
+
+    /* =========================
+       提灯
+    ========================= */
+
+    .lanterns {
+      display: flex;
+
+      justify-content: center;
+
+      gap: 14px;
+
+      padding:
+        15px
+        10px
+        5px;
+
+      flex-wrap: wrap;
+    }
+
+
+    .lantern {
+      width: 42px;
+      height: 58px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #e9435f,
+          #ff7894
+        );
+
+      border-radius:
+        10px 10px 14px 14px;
+
+      box-shadow:
+        0 0 14px
+        rgba(255,220,90,0.75);
+
+      position: relative;
+    }
+
+
+    .lantern::before {
+      content: "";
+
+      position: absolute;
+
+      top: -5px;
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      width: 25px;
+      height: 7px;
+
+      background: #ffd65a;
+
+      border-radius: 5px;
+    }
+
+
+    .lantern::after {
+      content: "";
+
+      position: absolute;
+
+      bottom: -5px;
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      width: 20px;
+      height: 7px;
+
+      background: #ffd65a;
+
+      border-radius: 5px;
+    }
+
+
+    /* =========================
+       ヘッダー
+    ========================= */
+
+    header {
+      width:
+        min(
+          900px,
+          calc(100% - 30px)
+        );
+
+      margin:
+        10px auto 20px;
+
+      padding: 30px;
+
+      background: #fff9eb;
+
+      border:
+        5px solid #ffd65a;
+
+      border-radius: 25px;
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,39,88,0.3);
+
+      text-align: center;
+
+      position: relative;
+    }
+
+
+    header::before,
+    header::after {
+      content: "";
+
+      position: absolute;
+
+      width: 22px;
+      height: 22px;
+
+      background: #e9435f;
+
+      border-radius: 50%;
+
+      top: 14px;
+    }
+
+
+    header::before {
+      left: 15px;
+    }
+
+
+    header::after {
+      right: 15px;
+    }
+
+
+    .logo {
+      width: 150px;
+      height: 150px;
+
+      object-fit: cover;
+
+      background: #07549d;
+
+      border-radius: 18px;
+
+      padding: 8px;
+
+      box-shadow:
+        0 7px 0 #043768;
+
+      margin-bottom: 15px;
+    }
+
+
+    .class-name {
+      display: inline-block;
+
+      padding:
+        7px 18px;
+
+      background: #e9435f;
+
+      color: white;
+
+      border-radius: 50px;
+
+      font-weight: bold;
+
+      margin-bottom: 10px;
+    }
+
+
+    h1 {
+      margin:
+        5px 0 8px;
+
+      color: #063b78;
+
+      font-size: 2rem;
+
+      text-shadow:
+        2px 2px 0 #b9e8ff;
+    }
+
+
+    .subtitle {
+      margin: 0;
+
+      font-weight: bold;
+
+      color: #38617e;
+    }
+
+
+    /* =========================
+       メイン
+    ========================= */
+
+    main {
+      width:
+        min(
+          900px,
+          calc(100% - 30px)
+        );
+
+      margin:
+        0 auto 30px;
+    }
+
+
+    /* =========================
+       カード
+    ========================= */
+
+    .card {
+      background:
+        rgba(255,255,255,0.97);
+
+      border-radius: 20px;
+
+      padding: 25px;
+
+      margin-bottom: 20px;
+
+      border:
+        3px solid #ffd65a;
+
+      box-shadow:
+        0 9px 25px
+        rgba(0,39,88,0.25);
+    }
+
+
+    .card h2 {
+      margin-top: 0;
+
+      color: #063b78;
+
+      font-size: 1.5rem;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+
+    .card h2::before {
+      content: "祭";
+
+      display: grid;
+
+      place-items: center;
+
+      width: 40px;
+      height: 40px;
+
+      background: #e9435f;
+
+      color: white;
+
+      border-radius: 9px;
+
+      font-size: 1rem;
+
+      flex-shrink: 0;
+    }
+
+
+    /* =========================
+       解説
+    ========================= */
+
+    .explanation {
+      background: #f3fbff;
+
+      border:
+        3px solid #ff668c;
+
+      border-radius: 16px;
+
+      padding: 25px;
+
+      text-align: center;
+    }
+
+
+    .explanation-text {
+      font-size: 1.1rem;
+
+      line-height: 1.8;
+
+      margin:
+        0 0 20px;
+    }
+
+
+    /* =========================
+       答えを表示するボタン
+    ========================= */
+
+    #answerButton {
+      display: inline-block;
+
+      padding:
+        14px 35px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #e9435f,
+          #ff7894
+        );
+
+      color: white;
+
+      border: none;
+
+      border-radius: 12px;
+
+      font-size: 1.05rem;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 5px 0 #a82e45;
+
+      transition:
+        0.15s;
+    }
+
+
+    #answerButton:hover {
+      transform:
+        translateY(-1px);
+    }
+
+
+    #answerButton:active {
+      transform:
+        translateY(3px);
+
+      box-shadow:
+        0 2px 0 #a82e45;
+    }
+
+
+    #answerButton:disabled {
+      cursor: default;
+
+      opacity: 0.8;
+
+      transform: none;
+    }
+
+
+    /* =========================
+       答え
+    ========================= */
+
+    #answer {
+      display: none;
+
+      margin-top: 22px;
+
+      padding: 20px;
+
+      background: #fff9eb;
+
+      border:
+        3px solid #ffd65a;
+
+      border-radius: 15px;
+
+      color: #e9435f;
+
+      font-size: 2rem;
+
+      font-weight: bold;
+
+      animation:
+        answerAppear 0.4s ease;
+    }
+
+
+    @keyframes answerAppear {
+
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+
+    }
+
+
+    /* =========================
+       戻るボタン
+    ========================= */
+
+    .back-button {
+      display: inline-block;
+
+      padding:
+        13px 30px;
+
+      background: white;
+
+      color: #07519a;
+
+      border:
+        3px solid #07519a;
+
+      border-radius: 12px;
+
+      text-decoration: none;
+
+      font-weight: bold;
+
+      box-shadow:
+        0 4px 0 #043768;
+
+      transition:
+        0.15s;
+    }
+
+
+    .back-button:hover {
+      background: #e8f7ff;
+
+      transform:
+        translateY(-1px);
+    }
+
+
+    .back-button:active {
+      transform:
+        translateY(2px);
+
+      box-shadow:
+        0 2px 0 #043768;
+    }
+
+
+    .back-area {
+      text-align: center;
+    }
+
+
+    /* =========================
+       フッター
+    ========================= */
+
+    footer {
+      text-align: center;
+
+      color: white;
+
+      padding-bottom: 30px;
+
+      font-weight: bold;
+
+      text-shadow:
+        0 1px 3px #034071;
+    }
+
+
+    /* =========================
+       スマホ対応
+    ========================= */
+
+    @media (max-width: 650px) {
+
+      .lanterns {
+        gap: 7px;
+      }
+
+
+      .lantern {
+        width: 32px;
+        height: 47px;
+      }
+
+
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+
+
+      header {
+        padding:
+          25px 17px;
+      }
+
+
+      h1 {
+        font-size: 1.6rem;
+      }
+
+
+      .card {
+        padding: 20px;
+      }
+
+
+      #answerButton {
+        width: 100%;
+      }
+
+
+      .back-button {
+        width: 100%;
+
+        text-align: center;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       提灯
+  ========================= -->
+
+  <div class="lanterns">
+
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+
+  </div>
+
+
+  <!-- =========================
+       ヘッダー
+  ========================= -->
+
+  <header>
+
+    <img
+      class="logo"
+      src="logo.jpg"
+      alt="1年C組のロゴ"
+    >
+
+
+    <div class="class-name">
+      文化祭・1年C組
+    </div>
+
+
+    <h1>
+      第2問の解説
+    </h1>
+
+
+    <p class="subtitle">
+      第2問の答えを確認しよう！
+    </p>
+
+  </header>
+
+
+  <!-- =========================
+       メイン
+  ========================= -->
+
+  <main>
+
+
+    <!-- =========================
+         解説
+    ========================= -->
+
+    <section class="card">
+
+      <h2>
+        第2問の答え
+      </h2>
+
+
+      <div class="explanation">
+
+        <p class="explanation-text">
+          第2問の答えが分からなかったかな？<br>
+          下のボタンを押すと答えが表示されます！
+        </p>
+
+
+        <!-- 答えを表示するボタン -->
+
+        <button
+          id="answerButton"
+          onclick="showAnswer()"
+        >
+          答えを表示する
+        </button>
+
+
+        <!-- 答え -->
+
+        <div id="answer">
+          まつり
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         戻る
+    ========================= -->
+
+    <section class="card">
+
+      <div class="back-area">
+
+        <a
+          href="question2.html"
+          class="back-button"
+        >
+          ← 第2問へ戻る
+        </a>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =========================
+       フッター
+  ========================= -->
+
+  <footer>
+
+    一緒に文化祭を盛り上げよう！
+
+    <br>
+
+    1年C組 縁日謎解き
+
+  </footer>
+
+
+  <!-- =========================
+       JavaScript
+  ========================= -->
+
+  <script>
+
+    function showAnswer() {
+
+      const answer =
+        document.getElementById("answer");
+
+      const button =
+        document.getElementById("answerButton");
+
+
+      answer.style.display =
+        "block";
+
+
+      button.textContent =
+        "答えを表示しました！";
+
+
+      button.disabled =
+        true;
+
+    }
+
+  </script>
+
+
+</body>
+
+</html>

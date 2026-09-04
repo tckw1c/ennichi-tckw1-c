@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>1年C組｜縁日謎解き 第3問</title>
+
+  <style>
+
+    /* =========================
+       全体
+    ========================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+
+      font-family:
+        "Yu Gothic",
+        "Hiragino Kaku Gothic ProN",
+        sans-serif;
+
+      color: #17395c;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,0.15) 2px,
+          transparent 2px
+        ) 0 0 / 35px 35px,
+
+        linear-gradient(
+          160deg,
+          #07519a,
+          #0780c9,
+          #65c9ed
+        );
+
+      min-height: 100vh;
+    }
+
+
+    /* =========================
+       提灯
+    ========================= */
+
+    .lanterns {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      padding: 15px 10px 5px;
+      overflow: hidden;
+    }
+
+
+    .lantern {
+      width: 42px;
+      height: 58px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #f04c61,
+          #ff8b78,
+          #f04c61
+        );
+
+      border-radius: 45% 45% 50% 50%;
+
+      box-shadow:
+        0 0 18px rgba(255, 220, 90, 0.8);
+
+      position: relative;
+
+      flex-shrink: 0;
+    }
+
+
+    .lantern::before,
+    .lantern::after {
+      content: "";
+
+      position: absolute;
+
+      left: 7px;
+      right: 7px;
+
+      height: 3px;
+
+      background: #fff3c2;
+    }
+
+
+    .lantern::before {
+      top: 9px;
+    }
+
+
+    .lantern::after {
+      bottom: 9px;
+    }
+
+
+    /* =========================
+       ヘッダー
+    ========================= */
+
+    header {
+      width: min(900px, calc(100% - 30px));
+
+      margin: 15px auto 0;
+
+      padding: 35px 20px 30px;
+
+      text-align: center;
+
+      background: #fff9eb;
+
+      border: 5px solid #ffd65a;
+
+      border-radius: 25px;
+
+      box-shadow:
+        0 12px 35px rgba(0, 35, 85, 0.35);
+
+      position: relative;
+    }
+
+
+    header::before,
+    header::after {
+      content: "";
+
+      position: absolute;
+
+      width: 60px;
+      height: 60px;
+
+      background: #e9435f;
+
+      border-radius: 50%;
+
+      z-index: 0;
+    }
+
+
+    header::before {
+      left: -25px;
+      top: -25px;
+    }
+
+
+    header::after {
+      right: -25px;
+      top: -25px;
+    }
+
+
+    /* =========================
+       ロゴ
+    ========================= */
+
+    .logo {
+      width: 150px;
+      height: 150px;
+
+      object-fit: contain;
+
+      display: block;
+
+      margin: 0 auto 15px;
+
+      background: #07549d;
+
+      border-radius: 18px;
+
+      padding: 8px;
+
+      box-shadow:
+        0 6px 0 #043768;
+
+      position: relative;
+
+      z-index: 1;
+    }
+
+
+    /* =========================
+       クラス名
+    ========================= */
+
+    .class-name {
+      display: inline-block;
+
+      background: #0b5cab;
+
+      color: white;
+
+      padding: 6px 18px;
+
+      border-radius: 50px;
+
+      font-weight: bold;
+
+      letter-spacing: 0.12em;
+
+      position: relative;
+
+      z-index: 1;
+    }
+
+
+    /* =========================
+       タイトル
+    ========================= */
+
+    h1 {
+      margin: 15px 0 5px;
+
+      color: #063b78;
+
+      font-size: clamp(2rem, 7vw, 4rem);
+
+      letter-spacing: 0.08em;
+
+      text-shadow:
+        2px 3px 0 #b9e8ff;
+
+      position: relative;
+
+      z-index: 1;
+    }
+
+
+    .subtitle {
+      margin: 0;
+
+      color: #38617e;
+
+      font-weight: bold;
+
+      position: relative;
+
+      z-index: 1;
+    }
+
+
+    /* =========================
+       メイン
+    ========================= */
+
+    main {
+      width: min(900px, calc(100% - 30px));
+
+      margin: 25px auto 50px;
+    }
+
+
+    /* =========================
+       カード
+    ========================= */
+
+    .card {
+      background: rgba(255,255,255,0.97);
+
+      border-radius: 20px;
+
+      padding: 25px;
+
+      margin-bottom: 20px;
+
+      border: 3px solid #ffd65a;
+
+      box-shadow:
+        0 9px 25px rgba(0,39,88,0.25);
+    }
+
+
+    /* =========================
+       見出し
+    ========================= */
+
+    .card h2 {
+      margin-top: 0;
+
+      color: #063b78;
+
+      font-size: 1.5rem;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+
+    .card h2::before {
+      content: "祭";
+
+      display: grid;
+
+      place-items: center;
+
+      width: 40px;
+      height: 40px;
+
+      background: #e9435f;
+
+      color: white;
+
+      border-radius: 9px;
+
+      font-size: 1rem;
+
+      flex-shrink: 0;
+    }
+
+
+    /* =========================
+       第3問バッジ
+    ========================= */
+
+    .question-badge {
+      display: inline-block;
+
+      background: #e9435f;
+
+      color: white;
+
+      padding: 7px 18px;
+
+      border-radius: 50px;
+
+      font-weight: bold;
+
+      margin-bottom: 15px;
+
+      box-shadow:
+        0 3px 0 #a82e45;
+    }
+
+
+    /* =========================
+       問題説明
+    ========================= */
+
+    .question-text {
+      background: #e8f7ff;
+
+      border-left: 7px solid #0b5cab;
+
+      padding: 15px;
+
+      border-radius: 8px;
+
+      line-height: 1.8;
+
+      margin-bottom: 20px;
+    }
+
+
+    .question-text strong {
+      color: #e9435f;
+    }
+
+
+    /* =========================
+       謎の画像
+    ========================= */
+
+    .puzzle {
+      background: #ffffff;
+
+      border: 3px solid #ff668c;
+
+      border-radius: 16px;
+
+      padding: 15px;
+
+      text-align: center;
+    }
+
+
+    .puzzle-image {
+      width: 100%;
+
+      max-width: 850px;
+
+      height: auto;
+
+      display: block;
+
+      margin: 0 auto;
+
+      border-radius: 8px;
+    }
+
+
+    /* =========================
+       答え入力
+    ========================= */
+
+    .answer-title {
+      font-weight: bold;
+
+      font-size: 1.15rem;
+
+      margin: 20px 0 5px;
+    }
+
+
+    .answer-note {
+      margin: 0 0 10px;
+
+      font-size: 0.95rem;
+
+      color: #555;
+    }
+
+
+    .answer-row {
+      display: flex;
+
+      gap: 10px;
+
+      max-width: 650px;
+
+      margin: auto;
+    }
+
+
+    input {
+      width: 100%;
+
+      padding: 14px;
+
+      border: 2px solid #9ccde7;
+
+      border-radius: 12px;
+
+      font-size: 1.1rem;
+
+      outline: none;
+    }
+
+
+    input:focus {
+      border-color: #0b5cab;
+
+      box-shadow:
+        0 0 0 3px #c9edff;
+    }
+
+
+    /* =========================
+       ボタン
+    ========================= */
+
+    button {
+      border: none;
+
+      border-radius: 12px;
+
+      padding: 13px 22px;
+
+      background: #e9435f;
+
+      color: white;
+
+      font-size: 1rem;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 4px 0 #a82e45;
+
+      white-space: nowrap;
+
+      transition: 0.15s;
+    }
+
+
+    button:hover {
+      filter: brightness(1.1);
+
+      transform: translateY(-1px);
+    }
+
+
+    button:active {
+      transform: translateY(2px);
+
+      box-shadow:
+        0 2px 0 #a82e45;
+    }
+
+
+    /* =========================
+       答えの結果
+    ========================= */
+
+    #result {
+      min-height: 25px;
+
+      margin-top: 15px;
+
+      font-weight: bold;
+
+      font-size: 1.1rem;
+    }
+
+
+    .correct {
+      color: #0b8a59;
+    }
+
+
+    .wrong {
+      color: #d4314e;
+    }
+
+
+    /* =========================
+       次の問題へ
+    ========================= */
+
+    #nextButton {
+      display: none;
+
+      margin: 20px auto 5px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #0879c9,
+          #07519a
+        );
+
+      font-size: 1.1rem;
+
+      padding: 15px 30px;
+
+      box-shadow:
+        0 5px 0 #043768;
+
+      animation:
+        nextAppear 0.5s ease;
+    }
+
+
+    @keyframes nextAppear {
+
+      from {
+        opacity: 0;
+
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform: translateY(0);
+      }
+
+    }
+
+
+    /* =========================
+       ヒント
+    ========================= */
+
+    .hint-section {
+      background: #e8f7ff;
+
+      border: 3px solid #54b5e8;
+
+      border-radius: 16px;
+
+      padding: 20px;
+    }
+
+
+    .hint-title {
+      color: #063b78;
+
+      font-size: 1.4rem;
+
+      font-weight: bold;
+
+      margin: 0 0 15px;
+    }
+
+
+    .hint-item {
+      margin-bottom: 15px;
+    }
+
+
+    .hint-item:last-child {
+      margin-bottom: 0;
+    }
+
+
+    .hint-button {
+      background: white;
+
+      color: #07519a;
+
+      border: 2px solid #4d9fe0;
+
+      box-shadow: none;
+
+      width: 100%;
+
+      text-align: left;
+    }
+
+
+    .hint-button:hover {
+      background: #f2fbff;
+
+      color: #063b78;
+    }
+
+
+    .hint-box {
+      display: none;
+
+      margin-top: 10px;
+
+      padding: 15px;
+
+      background: white;
+
+      border-left: 6px solid #0b5cab;
+
+      border-radius: 10px;
+
+      line-height: 1.8;
+
+      animation:
+        hintAppear 0.4s ease;
+    }
+
+
+    /* =========================
+       Give Up
+    ========================= */
+
+    .giveup-section {
+      background: #fff4f4;
+
+      border: 3px solid #e9435f;
+
+      border-radius: 16px;
+
+      padding: 20px;
+
+      text-align: center;
+    }
+
+
+    .giveup-title {
+      margin: 0 0 8px;
+
+      color: #b52d45;
+
+      font-size: 1.4rem;
+
+      font-weight: bold;
+    }
+
+
+    .giveup-text {
+      margin: 0 0 15px;
+
+      color: #555;
+
+      line-height: 1.7;
+    }
+
+
+    .giveup-button {
+      display: inline-block;
+
+      padding: 14px 35px;
+
+      background: white;
+
+      color: #d4314e;
+
+      border: 3px solid #d4314e;
+
+      border-radius: 12px;
+
+      text-decoration: none;
+
+      font-weight: bold;
+
+      font-size: 1.05rem;
+
+      box-shadow:
+        0 4px 0 #a82e45;
+
+      transition: 0.15s;
+    }
+
+
+    .giveup-button:hover {
+      background: #d4314e;
+
+      color: white;
+
+      transform: translateY(-1px);
+    }
+
+
+    .giveup-button:active {
+      transform: translateY(2px);
+
+      box-shadow:
+        0 2px 0 #a82e45;
+    }
+
+
+    /* =========================
+       前の問題へ戻る
+    ========================= */
+
+    .back-button {
+      display: block;
+
+      width: fit-content;
+
+      margin: 20px auto 0;
+
+      padding: 14px 30px;
+
+      background: white;
+
+      color: #07519a;
+
+      border: 2px solid #4d9fe0;
+
+      text-decoration: none;
+
+      border-radius: 12px;
+
+      font-weight: bold;
+
+      box-shadow:
+        0 4px 0 rgba(0, 60, 120, 0.2);
+    }
+
+
+    .back-button:hover {
+      background: #f2fbff;
+    }
+
+
+    /* =========================
+       フッター
+    ========================= */
+
+    footer {
+      text-align: center;
+
+      color: white;
+
+      padding-bottom: 30px;
+
+      font-weight: bold;
+
+      text-shadow:
+        0 1px 3px #034071;
+    }
+
+
+    /* =========================
+       スマホ対応
+    ========================= */
+
+    @media (max-width: 650px) {
+
+      .lanterns {
+        gap: 7px;
+      }
+
+
+      .lantern {
+        width: 32px;
+        height: 47px;
+      }
+
+
+      .logo {
+        width: 125px;
+        height: 125px;
+      }
+
+
+      header {
+        padding: 28px 17px 23px;
+      }
+
+
+      .answer-row {
+        flex-direction: column;
+      }
+
+
+      button {
+        width: 100%;
+      }
+
+
+      .puzzle {
+        padding: 8px;
+      }
+
+
+      .puzzle-image {
+        margin-bottom: 10px;
+      }
+
+
+      .back-button {
+        width: 100%;
+
+        text-align: center;
+      }
+
+
+      .giveup-button {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- =========================
+       提灯
+  ========================= -->
+
+  <div class="lanterns">
+
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+    <div class="lantern"></div>
+
+  </div>
+
+
+
+  <!-- =========================
+       ヘッダー
+  ========================= -->
+
+  <header>
+
+    <img
+      class="logo"
+      src="logo.jpg"
+      alt="1年C組のロゴ"
+    >
+
+
+    <div class="class-name">
+      文化祭・1年C組
+    </div>
+
+
+    <h1>
+      縁日謎解き
+    </h1>
+
+
+    <p class="subtitle">
+      第3問　次の謎に挑戦しよう！
+    </p>
+
+  </header>
+
+
+
+  <main>
+
+
+    <!-- =========================
+         第3問
+    ========================= -->
+
+    <section class="card">
+
+      <div class="question-badge">
+        🔥 第3問 🔥
+      </div>
+
+
+      <h2>
+        第3問の謎
+      </h2>
+
+
+      <div class="question-text">
+
+        この謎を解いて、
+        <strong>答えを入力しよう！</strong>
+
+        <br>
+
+        謎をよく見て、答えを考えてみよう！
+
+      </div>
+
+
+      <div class="puzzle">
+
+
+        <!-- 第3問の画像 -->
+
+        <img
+          class="puzzle-image"
+          src="puzzle3.png"
+          alt="第3問の謎"
+        >
+
+
+        <p class="answer-title">
+          答えを入力しよう！
+        </p>
+
+
+        <p class="answer-note">
+          ※ひらがなで入力してください
+        </p>
+
+
+        <div class="answer-row">
+
+
+          <input
+            id="answer"
+            type="text"
+            placeholder="ひらがなで入力してください"
+            autocomplete="off"
+          >
+
+
+          <button
+            onclick="checkAnswer()"
+          >
+            答え合わせ
+          </button>
+
+
+        </div>
+
+
+        <!-- 答えの結果 -->
+
+        <p id="result"></p>
+
+
+        <!-- 正解後のボタン -->
+
+        <button
+          id="nextButton"
+          onclick="goToNextPage()"
+        >
+          第4問へ進む →
+        </button>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         ヒント
+    ========================= -->
+
+    <section class="card">
+
+      <div class="hint-section">
+
+
+        <p class="hint-title">
+          💡 ヒント
+        </p>
+
+
+        <div class="hint-item">
+
+          <button
+            id="hintButton1"
+            class="hint-button"
+            onclick="showHint(1)"
+          >
+            ヒント①を表示する
+          </button>
+
+
+          <div
+            id="hint1"
+            class="hint-box"
+          >
+
+            右の図は輪投げ(わなげ)だね
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         Give Up
+    ========================= -->
+
+    <section class="card">
+
+      <div class="giveup-section">
+
+
+        <p class="giveup-title">
+          😵 Give Up？
+        </p>
+
+
+        <p class="giveup-text">
+
+          どうしても分からないときは、
+          解説を見ることができます。
+
+          <br>
+
+          本当にGive Upする？
+
+        </p>
+
+
+        <a
+          href="question3-explanation.html"
+          class="giveup-button"
+        >
+          Give Up
+        </a>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         第2問へ戻る
+    ========================= -->
+
+    <a
+      href="question2.html"
+      class="back-button"
+    >
+      ← 第2問へ戻る
+    </a>
+
+
+  </main>
+
+
+
+  <!-- =========================
+       フッター
+    ========================= -->
+
+  <footer>
+
+    最後まであきらめずに挑戦しよう！
+
+    <br>
+
+    1年C組 縁日謎解き
+
+  </footer>
+
+
+
+  <!-- =========================
+       JavaScript
+    ========================= -->
+
+  <script>
+
+
+    /* =========================
+       答え合わせ
+    ========================= */
+
+    function checkAnswer() {
+
+      const input =
+        document.getElementById("answer");
+
+
+      const result =
+        document.getElementById("result");
+
+
+      const nextButton =
+        document.getElementById("nextButton");
+
+
+      const answer =
+        input.value
+          .trim()
+          .replace(/\s/g, "");
+
+
+      /* =========================
+         空欄
+      ========================= */
+
+      if (answer === "") {
+
+        result.textContent =
+          "答えを入力してね！";
+
+        result.className =
+          "wrong";
+
+        nextButton.style.display =
+          "none";
+
+        return;
+      }
+
+
+      /* =========================
+         正解
+      ========================= */
+
+      if (answer === "とりい") {
+
+        result.textContent =
+          "🎉 正解！ お見事！";
+
+        result.className =
+          "correct";
+
+        nextButton.style.display =
+          "block";
+
+      }
+
+
+      /* =========================
+         不正解
+      ========================= */
+
+      else {
+
+        result.textContent =
+          "❌ 残念！ もう一度考えてみよう。";
+
+        result.className =
+          "wrong";
+
+        nextButton.style.display =
+          "none";
+
+      }
+
+    }
+
+
+
+    /* =========================
+       第4問へ進む
+    ========================= */
+
+    function goToNextPage() {
+
+      window.location.href =
+        "question4.html";
+
+    }
+
+
+
+    /* =========================
+       ヒント表示
+    ========================= */
+
+    function showHint(number) {
+
+      const hint =
+        document.getElementById(
+          "hint" + number
+        );
+
+
+      const button =
+        document.getElementById(
+          "hintButton" + number
+        );
+
+
+      if (
+        hint.style.display === "block"
+      ) {
+
+        hint.style.display =
+          "none";
+
+        button.textContent =
+          "ヒント" + number + "を表示する";
+
+      }
+
+
+      else {
+
+        hint.style.display =
+          "block";
+
+        button.textContent =
+          "ヒント" + number + "を閉じる";
+
+      }
+
+    }
+
+
+
+    /* =========================
+       Enterキーで答え合わせ
+    ========================= */
+
+    document
+      .getElementById("answer")
+      .addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter"
+          ) {
+
+            checkAnswer();
+
+          }
+
+        }
+      );
+
+
+  </script>
+
+
+</body>
+
+</html>

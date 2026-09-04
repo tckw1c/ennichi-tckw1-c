@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1年C組｜縁日謎解き 最終問題の解説</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+    color: #17395c;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,.22) 2px, transparent 3px),
+      radial-gradient(circle at 80% 30%, rgba(255,255,255,.18) 2px, transparent 3px),
+      linear-gradient(135deg, #07519a, #0780c9 55%, #65c9ed);
+    background-size: 45px 45px, 55px 55px, auto;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* ===== 提灯 ===== */
+  .lanterns {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding: 15px 10px 5px;
+    flex-wrap: wrap;
+  }
+
+  .lantern {
+    width: 42px;
+    height: 58px;
+    background: linear-gradient(#ff5272, #e83252);
+    border-radius: 18px 18px 14px 14px;
+    position: relative;
+    box-shadow:
+      0 0 12px rgba(255, 245, 130, .9),
+      0 4px 8px rgba(0,0,0,.2);
+  }
+
+  .lantern::before,
+  .lantern::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffd65a;
+  }
+
+  .lantern::before {
+    width: 34px;
+    height: 4px;
+    top: -5px;
+    border-radius: 5px;
+  }
+
+  .lantern::after {
+    width: 5px;
+    height: 8px;
+    bottom: -6px;
+    border-radius: 0 0 4px 4px;
+  }
+
+  /* ===== ヘッダー ===== */
+  header {
+    width: min(900px, calc(100% - 30px));
+    margin: 10px auto 20px;
+    background: #fff9eb;
+    border: 5px solid #ffd65a;
+    border-radius: 25px;
+    padding: 22px 20px 25px;
+    text-align: center;
+    box-shadow: 0 8px 0 #07549d;
+    position: relative;
+  }
+
+  header::before,
+  header::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #e9435f;
+    border-radius: 50%;
+    top: 12px;
+  }
+
+  header::before {
+    left: 15px;
+  }
+
+  header::after {
+    right: 15px;
+  }
+
+  .logo {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    background: #07549d;
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 5px 0 #05376d;
+    margin-bottom: 12px;
+  }
+
+  .class-name {
+    display: inline-block;
+    background: #0780c9;
+    color: white;
+    font-weight: bold;
+    padding: 7px 18px;
+    border-radius: 30px;
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    margin: 5px 0 8px;
+    color: #063b78;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-shadow: 2px 2px 0 #b9e8ff;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  /* ===== メイン ===== */
+  main {
+    width: min(900px, calc(100% - 30px));
+    margin: 0 auto;
+  }
+
+  .card {
+    background: rgba(255,255,255,.97);
+    border: 4px solid #ffd65a;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 7px 0 #07549d;
+    text-align: center;
+  }
+
+  .card h2 {
+    margin: 0 0 20px;
+    color: #e9435f;
+    font-size: 1.8rem;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e9435f;
+    color: white;
+    padding: 5px 13px;
+    border-radius: 20px;
+    margin-right: 7px;
+    font-size: 1rem;
+  }
+
+  .explanation {
+    margin: 20px auto;
+    padding: 25px 20px;
+    background: #fff7f7;
+    border: 3px solid #ff668c;
+    border-radius: 16px;
+    max-width: 650px;
+  }
+
+  .explanation p {
+    margin: 0 0 20px;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+
+  #answerButton {
+    border: none;
+    background: linear-gradient(#ff5b78, #e9435f);
+    color: white;
+    font-size: 1.15rem;
+    font-weight: bold;
+    padding: 14px 28px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #a82e45;
+    transition: .15s;
+  }
+
+  #answerButton:hover {
+    transform: translateY(-2px);
+  }
+
+  #answerButton:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #a82e45;
+  }
+
+  #answerButton:disabled {
+    cursor: default;
+    opacity: .8;
+    transform: none;
+  }
+
+  #answer {
+    display: none;
+    margin-top: 25px;
+    padding: 18px;
+    background: #fff9d8;
+    border: 3px solid #ffd65a;
+    border-radius: 14px;
+    color: #e9435f;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 22px;
+    background: white;
+    color: #07549d;
+    border: 3px solid #07549d;
+    border-radius: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 4px 0 #05376d;
+    transition: .15s;
+  }
+
+  .back-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .back-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #05376d;
+  }
+
+  /* ===== スマホ ===== */
+  @media (max-width: 650px) {
+    .lanterns {
+      gap: 8px;
+    }
+
+    .lantern {
+      width: 32px;
+      height: 45px;
+      border-radius: 14px 14px 10px 10px;
+    }
+
+    header {
+      padding: 18px 14px 20px;
+    }
+
+    .logo {
+      width: 125px;
+      height: 125px;
+    }
+
+    .card {
+      padding: 20px 15px;
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+    }
+
+    #answerButton,
+    .back-button {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="lanterns">
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+  <div class="lantern"></div>
+</div>
+
+<header>
+  <img src="logo.jpg" alt="1年C組 ロゴ" class="logo">
+
+  <div class="class-name">文化祭・1年C組</div>
+
+  <h1>縁日謎解き</h1>
+
+  <p class="subtitle">
+    最終問題の答えを確認しよう！
+  </p>
+</header>
+
+<main>
+  <section class="card">
+
+    <h2>
+      <span class="badge">🔥 最終問題 🔥</span>
+      最終問題の解説
+    </h2>
+
+    <div class="explanation">
+
+      <p>
+        最後の答えがわかったかな？<br>
+        答えを表示するボタンを押して確認しよう！
+      </p>
+
+      <button id="answerButton" onclick="showAnswer()">
+        答えを表示する
+      </button>
+
+      <div id="answer">
+        縁日
+      </div>
+
+    </div>
+
+    <a href="final.html" class="back-button">
+      ← 最終問題へ戻る
+    </a>
+
+  </section>
+</main>
+
+<script>
+  function showAnswer() {
+    const answer = document.getElementById("answer");
+    const button = document.getElementById("answerButton");
+
+    answer.style.display = "block";
+    button.textContent = "答えを表示しました！";
+    button.disabled = true;
+  }
+</script>
+
+</body>
+</html>
